@@ -1,0 +1,36 @@
+import Foundation
+
+struct PluginMeta {
+    struct SemVer {
+        let major: Int
+        let minor: Int
+        let patch: Int
+        let build: String?
+    }
+
+    static let name = "@CMAKE_PROJECT_NAME@"
+    static let versionString = "@CMAKE_PROJECT_VERSION@"
+
+    let version: SemVer? = {
+        let versionParts = PluginMeta.versionString.components(separatedBy: [".", "-"])
+
+        switch versionParts.count {
+            case 3:
+                return SemVer(
+                    major: Int(versionParts[0]) ?? 0,
+                    minor: Int(versionParts[1]) ?? 0,
+                    patch: Int(versionParts[2]) ?? 0,
+                    build: nil
+                )
+            case 4:
+            return SemVer(
+                major: Int(versionParts[0]) ?? 0,
+                minor: Int(versionParts[1]) ?? 0,
+                patch: Int(versionParts[2]) ?? 0,
+                build: versionParts[3]
+            )
+            default:
+                return nil
+        }
+    }()
+}
